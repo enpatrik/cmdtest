@@ -7,27 +7,34 @@ $splClassLoader = new \SplClassLoader('CmdTest', dirname(__FILE__) . DIRECTORY_S
 $splClassLoader->register();
 
 use CmdTest\Command\CommandChain;
-use CmdTest\Command\CommandDispatcher;
+use CmdTest\Command\CommandClient;
 use CmdTest\Social\ByeCommand;
+use CmdTest\Social\GreetingReceiver;
 use CmdTest\Social\HelloCommand;
 
 //***************************************************************************************************
 
 echo "\n\n\n";
 
-$helloCommand = new HelloCommand(array('to' => 'batler'));
-$commandDispatcher = new CommandDispatcher($helloCommand);
-$greeting = $commandDispatcher->execute();
-echo $greeting . PHP_EOL;
+
+$greetingReceiver = new GreetingReceiver();
+$helloCommand = new HelloCommand($greetingReceiver, array('to' => 'batler'));
+
+$helloClient = new CommandClient($helloCommand);
+$helloClient->execute();
+
 
 echo "\n\n\n";
 
-$byeCommand = new ByeCommand(array('to' => 'patlen'));
+
+$byeCommand = new ByeCommand($greetingReceiver, array('to' => 'patlen'));
+$byeClient = new CommandClient($byeCommand);
+
 $commandChain = new CommandChain();
-$commandChain->addCommand($helloCommand);
-$commandChain->addCommand($byeCommand);
-$phrases = $commandChain->execute();
-echo implode(PHP_EOL, $phrases);
+$commandChain->addCommandClient($helloClient);
+$commandChain->addCommandClient($byeClient);
+$commandChain->execute();
+
 
 echo "\n\n\n";
 

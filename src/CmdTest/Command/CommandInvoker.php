@@ -6,44 +6,40 @@ use CmdTest\Command\Param\CommandParams;
 
 class CommandInvoker
 {
+    /** @var SingleCommand */
+    private $command;
+
     /**
      * @param SingleCommand $command
-     * @return mixed
      */
-    public function executeCommand(SingleCommand $command)
+    public function setCommand(SingleCommand $command)
     {
-        $this->logParams($command->getCommandParams());
-        $returnValue = $command->execute();
-        $this->logResult($command->getResult());
-        $this->logReturnValue($returnValue);
-        return $returnValue;
+        $this->command = $command;
+    }
+
+    /**
+     * @return SingleCommand
+     */
+    public function getCommand()
+    {
+        return $this->command;
+    }
+
+    public function execute()
+    {
+        $this->logParams($this->getCommand()->getCommandParams());
+        $this->getCommand()->execute();
     }
 
     /**
      * @param CommandParams $params
      */
-    public function logParams(CommandParams $params)
+    protected function logParams(CommandParams $params)
     {
         $paramArr = array();
         foreach ($params->getParams() as $param) {
             $paramArr[] = $param->getName() . ' = ' . $param->getValue();
         }
-        echo 'Logged params: ' . implode(', ', $paramArr) . PHP_EOL;
-    }
-
-    /**
-     * @param mixed $result
-     */
-    public function logResult($result)
-    {
-        echo 'Logged result: ' . $result . PHP_EOL;
-    }
-
-    /**
-     * @param mixed $returnValue
-     */
-    public function logReturnValue($returnValue)
-    {
-        echo 'Logged return: ' . $returnValue . PHP_EOL;
+        echo '*** Logged params: ' . implode(', ', $paramArr) . PHP_EOL;
     }
 }

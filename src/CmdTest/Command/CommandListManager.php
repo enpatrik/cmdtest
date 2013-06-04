@@ -4,44 +4,28 @@
 namespace CmdTest\Command;
 
 
-abstract class CommandListManager implements CommandManager
+abstract class CommandListManager
 {
-    /** @var SingleCommand[] */
-    private $commandList = array();
-    /** @var CommandInvoker */
-    private $commandInvoker;
+    /** @var CommandClient[] */
+    private $commandClients = array();
 
     /**
-     * @param CommandInvoker $commandInvoker
-     */
-    public function __construct(CommandInvoker $commandInvoker = null)
-    {
-        $this->commandInvoker = is_null($commandInvoker) ? new CommandInvoker() : $commandInvoker;
-    }
-
-    /**
-     * @return CommandInvoker
-     */
-    protected function getCommandInvoker()
-    {
-        return $this->commandInvoker;
-    }
-
-    /**
-     * @param SingleCommand $command
+     * @param CommandClient $commandClient
      * @return CommandListManager
      */
-    public function addCommand(SingleCommand $command)
+    public function addCommandClient(CommandClient $commandClient)
     {
-        $this->commandList[] = $command;
+        $this->commandClients[] = $commandClient;
         return $this;
     }
 
     /**
-     * @return SingleCommand[]
+     * @return CommandClient[]
      */
-    public function getCommands()
+    public function getCommandClients()
     {
-        return $this->commandList;
+        return $this->commandClients;
     }
+
+    public abstract function execute();
 }

@@ -19,18 +19,17 @@ class HelloCommand extends SingleCommand
     }
 
     /**
-     * @return mixed
+     * @return GreetingReceiver
      */
-    public function getResult()
+    public function getReceiver()
     {
-        return 'I said hello to ' . $this->getCommandParams()->getParamValue('to');
+        return parent::getReceiver();
     }
 
-    /**
-     * @return mixed
-     */
-    public function execute()
+    public function prepareReceiver()
     {
-        return 'Hello ' . $this->getCommandParams()->getParamValue('to') . '!!!!';
+        $this->getReceiver()->setGreetingPhrase(
+            'Hello ' . $this->getCommandParams()->getParamValue('to') . ', my dear fellow!'
+        );
     }
 }

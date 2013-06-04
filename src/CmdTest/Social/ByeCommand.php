@@ -21,18 +21,17 @@ class ByeCommand extends SingleCommand
     }
 
     /**
-     * @return mixed
+     * @return GreetingReceiver
      */
-    public function getResult()
+    public function getReceiver()
     {
-        return 'I said bye to ' . $this->getCommandParams()->getParamValue('to');
+        return parent::getReceiver();
     }
 
-    /**
-     * @return mixed
-     */
-    public function execute()
+    public function prepareReceiver()
     {
-        return 'Goodbye ' . $this->getCommandParams()->getParamValue('to') . ' you fool!';
+        $this->getReceiver()->setGreetingPhrase(
+            'Goodbye ' . $this->getCommandParams()->getParamValue('to') . ', you fool!'
+        );
     }
 }

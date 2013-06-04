@@ -6,14 +6,18 @@ use CmdTest\Command\Param\CommandParams;
 
 abstract class SingleCommand implements Command
 {
+    /** @var \CmdTest\Command\CommandReceiver */
+    private $commandReceiver;
     /** @var CommandParams $params */
     private $params;
 
     /**
+     * @param CommandReceiver $commandReceiver
      * @param mixed|array $params
      */
-    public function __construct($params = null)
+    public function __construct(CommandReceiver $commandReceiver, $params = null)
     {
+        $this->commandReceiver = $commandReceiver;
         $this->params = $this->initCommandParams();
 
         if (is_null($params)) {
@@ -23,6 +27,14 @@ abstract class SingleCommand implements Command
         }
 
         $this->params->setValues($params);
+    }
+
+    /**
+     * @return CommandReceiver
+     */
+    public function getReceiver()
+    {
+        return $this->commandReceiver;
     }
 
     /**
@@ -38,13 +50,14 @@ abstract class SingleCommand implements Command
      */
     protected abstract function initCommandParams();
 
-    /**
-     * @return mixed
-     */
-    public abstract function getResult();
+    protected abstract function prepareReceiver();
 
     /**
      * @return mixed
      */
-    public abstract function execute();
+    public function execute()
+    {
+        $this->prepareReceiver();
+        $this->commandReceiver->action();
+    }
 }
