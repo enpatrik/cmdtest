@@ -51,24 +51,6 @@ abstract class SingleCommand implements Command
         if (is_null($this->params)) {
             $this->params = $this->initCommandParams();
         }
-        $returnValue = $this->doExecute();
-        $this->logReturnValue($returnValue);
-        $this->logResult($this->getResult());
-    }
-
-    /**
-     * @param mixed $result
-     */
-    private function logResult($result)
-    {
-        echo '*** Logged result: ' . $result . PHP_EOL;
-    }
-
-    /**
-     * @param $returnValue
-     */
-    private function logReturnValue($returnValue)
-    {
-        echo '*** Logged return: ' . $returnValue . PHP_EOL;
+        return $this->doExecute();
     }
 }

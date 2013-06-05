@@ -9,7 +9,7 @@ $splClassLoader->register();
 use CmdTest\Command\CommandChain;
 use CmdTest\Command\CommandClient;
 use CmdTest\Social\ByeCommand;
-use CmdTest\Social\GreetingReceiver;
+use CmdTest\Social\GreetingService;
 use CmdTest\Social\HelloCommand;
 
 //***************************************************************************************************
@@ -17,25 +17,29 @@ use CmdTest\Social\HelloCommand;
 echo "\n\n\n";
 
 
-$greetingReceiver = new GreetingReceiver();
-$helloCommand = new HelloCommand($greetingReceiver);
+$greetingService = new GreetingService();
+$helloCommand = new HelloCommand($greetingService);
 $helloCommand->setParamValues(array('to' => 'batler'));
 
-$helloClient = new CommandClient($helloCommand);
-$helloClient->execute();
+$commandChain = new CommandChain();
+$commandChain->addCommand($helloCommand);
+$result = $commandChain->execute();
+echo reset($result) . PHP_EOL;
 
 
 echo "\n\n\n";
 
 
-$byeCommand = new ByeCommand($greetingReceiver);
+$byeCommand = new ByeCommand($greetingService);
 $byeCommand->setParamValues(array('to' => 'patlen'));
-$byeClient = new CommandClient($byeCommand);
 
 $commandChain = new CommandChain();
-$commandChain->addCommandClient($helloClient);
-$commandChain->addCommandClient($byeClient);
-$commandChain->execute();
+$commandChain->addCommand($helloCommand);
+$commandChain->addCommand($byeCommand);
+$results = $commandChain->execute();
+foreach ($results as $result) {
+    echo $result . PHP_EOL;
+}
 
 
 echo "\n\n\n";

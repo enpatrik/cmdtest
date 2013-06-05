@@ -10,12 +10,12 @@ use CmdTest\Command\SingleCommand;
 
 class ByeCommand extends SingleCommand
 {
-    /** @var GreetingReceiver */
-    protected $greetingReceiver;
+    /** @var GreetingService */
+    protected $greetingService;
 
-    public function __construct(GreetingReceiver $greetingReceiver)
+    public function __construct(GreetingService $greetingService)
     {
-        $this->greetingReceiver = $greetingReceiver;
+        $this->greetingService = $greetingService;
     }
 
     /**
@@ -30,11 +30,7 @@ class ByeCommand extends SingleCommand
 
     public function doExecute()
     {
-        $this->greetingReceiver->setGreetingPhrase(
-            'Goodbye ' . $this->getCommandParams()->getParamValue('to') . ', you fool!'
-        );
-        $this->greetingReceiver->sayGreeting();
-        return $this->greetingReceiver->getGreeting();
+        return $this->greetingService->createGoodbyePhrase($this->getCommandParams()->getParamValue('to'));
     }
 
     /**
@@ -42,6 +38,6 @@ class ByeCommand extends SingleCommand
      */
     public function getResult()
     {
-        return 'I said this greeting: ' . $this->greetingReceiver->getGreeting();
+        return 'I said this greeting: Bye!';
     }
 }
