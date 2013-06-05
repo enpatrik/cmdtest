@@ -8,6 +8,14 @@ use CmdTest\Command\SingleCommand;
 
 class HelloCommand extends SingleCommand
 {
+    /** @var GreetingReceiver */
+    protected $greetingReceiver;
+
+    public function __construct(GreetingReceiver $greetingReceiver)
+    {
+        $this->greetingReceiver = $greetingReceiver;
+    }
+
     /**
      * @return CommandParams
      */
@@ -18,18 +26,20 @@ class HelloCommand extends SingleCommand
         return $params;
     }
 
-    /**
-     * @return GreetingReceiver
-     */
-    public function getReceiver()
+    public function doExecute()
     {
-        return parent::getReceiver();
-    }
-
-    public function prepareReceiver()
-    {
-        $this->getReceiver()->setGreetingPhrase(
+        $this->greetingReceiver->setGreetingPhrase(
             'Hello ' . $this->getCommandParams()->getParamValue('to') . ', my dear fellow!'
         );
+        $this->greetingReceiver->sayGreeting();
+        return $this->greetingReceiver->getGreeting();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return 'I said this greeting: ' . $this->greetingReceiver->getGreeting();
     }
 }

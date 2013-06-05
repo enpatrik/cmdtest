@@ -4,9 +4,7 @@
 namespace CmdTest\Social;
 
 
-use CmdTest\Command\CommandReceiver;
-
-class GreetingReceiver extends CommandReceiver
+class GreetingReceiver
 {
     /** @var string */
     protected $greeting;
@@ -22,17 +20,16 @@ class GreetingReceiver extends CommandReceiver
     /**
      * @return string
      */
-    public function doAction()
+    public function sayGreeting()
     {
         echo $this->greeting . PHP_EOL;
-        return $this->greeting;
     }
 
     /**
      * @return mixed
      */
-    public function getResult()
+    public function getGreeting()
     {
-        return 'I said this greeting: ' . $this->greeting;
+        return $this->greeting;
     }
 }

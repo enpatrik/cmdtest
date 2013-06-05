@@ -18,7 +18,8 @@ echo "\n\n\n";
 
 
 $greetingReceiver = new GreetingReceiver();
-$helloCommand = new HelloCommand($greetingReceiver, array('to' => 'batler'));
+$helloCommand = new HelloCommand($greetingReceiver);
+$helloCommand->setParamValues(array('to' => 'batler'));
 
 $helloClient = new CommandClient($helloCommand);
 $helloClient->execute();
@@ -27,7 +28,8 @@ $helloClient->execute();
 echo "\n\n\n";
 
 
-$byeCommand = new ByeCommand($greetingReceiver, array('to' => 'patlen'));
+$byeCommand = new ByeCommand($greetingReceiver);
+$byeCommand->setParamValues(array('to' => 'patlen'));
 $byeClient = new CommandClient($byeCommand);
 
 $commandChain = new CommandChain();

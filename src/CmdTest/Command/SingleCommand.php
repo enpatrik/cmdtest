@@ -6,35 +6,18 @@ use CmdTest\Command\Param\CommandParams;
 
 abstract class SingleCommand implements Command
 {
-    /** @var \CmdTest\Command\CommandReceiver */
-    private $commandReceiver;
     /** @var CommandParams $params */
-    private $params;
+    private $params = null;
 
     /**
-     * @param CommandReceiver $commandReceiver
-     * @param mixed|array $params
+     * @param array $paramValues
      */
-    public function __construct(CommandReceiver $commandReceiver, $params = null)
+    public function setParamValues(array $paramValues)
     {
-        $this->commandReceiver = $commandReceiver;
-        $this->params = $this->initCommandParams();
-
-        if (is_null($params)) {
-            $params = array();
-        } else if (!is_null($params) && !is_array($params)) {
-            $params = array($params);
+        if (is_null($this->params)) {
+            $this->params = $this->initCommandParams();
         }
-
-        $this->params->setValues($params);
-    }
-
-    /**
-     * @return CommandReceiver
-     */
-    public function getReceiver()
-    {
-        return $this->commandReceiver;
+        $this->params->setValues($paramValues);
     }
 
     /**
@@ -42,6 +25,9 @@ abstract class SingleCommand implements Command
      */
     public function getCommandParams()
     {
+        if (is_null($this->params)) {
+            $this->params = $this->initCommandParams();
+        }
         return $this->params;
     }
 
@@ -50,14 +36,39 @@ abstract class SingleCommand implements Command
      */
     protected abstract function initCommandParams();
 
-    protected abstract function prepareReceiver();
+    /**
+     * @return mixed
+     */
+    public abstract function doExecute();
 
     /**
      * @return mixed
      */
+    public abstract function getResult();
+
     public function execute()
     {
-        $this->prepareReceiver();
-        $this->commandReceiver->action();
+        if (is_null($this->params)) {
+            $this->params = $this->initCommandParams();
+        }
+        $returnValue = $this->doExecute();
+        $this->logReturnValue($returnValue);
+        $this->logResult($this->getResult());
+    }
+
+    /**
+     * @param mixed $result
+     */
+    private function logResult($result)
+    {
+        echo '*** Logged result: ' . $result . PHP_EOL;
+    }
+
+    /**
+     * @param $returnValue
+     */
+    private function logReturnValue($returnValue)
+    {
+        echo '*** Logged return: ' . $returnValue . PHP_EOL;
     }
 }
