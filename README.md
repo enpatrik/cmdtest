@@ -1,0 +1,4 @@
+cmdtest
+=======
+
+php test.php
